@@ -1,47 +1,31 @@
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
     react({
-      // Garante que o React seja injetado automaticamente para evitar o erro "React is not defined"
+      // Isso diz ao compilador para usar o novo transformador de JSX do React 17+
+      // que não exige o import manual em todos os arquivos.
       jsxRuntime: 'automatic',
     }),
     tailwindcss(),
   ],
-
+  // ADICIONE ESTA PARTE ABAIXO DOS PLUGINS:
+  esbuild: {
+    jsxInject: `import React from 'react'`,
+  },
   resolve: {
     alias: {
-      // Atalhos para as tuas pastas de código
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      "@": path.resolve(__dirname, "client", "src"),
+      "@shared": path.resolve(__dirname, "shared"),
+      "@assets": path.resolve(__dirname, "attached_assets"),
     },
   },
-
-  // Define onde estão os teus ficheiros de ambiente
-  envDir: path.resolve(import.meta.dirname),
-
-  // A pasta raiz do teu código front-end
-  root: path.resolve(import.meta.dirname, "client"),
-
-  // Onde estão as tuas imagens e ícones públicos
-  publicDir: path.resolve(import.meta.dirname, "client", "public"),
-
+  root: path.resolve(__dirname, "client"),
   build: {
-    // Pasta onde o site final será gerado para a Vercel ler
-    outDir: path.resolve(import.meta.dirname, "dist"),
+    outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
-  },
-
-  server: {
-    host: true,
-    port: 3000,
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
   },
 });
