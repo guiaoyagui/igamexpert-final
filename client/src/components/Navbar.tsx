@@ -5,10 +5,10 @@ import { useLocation } from "wouter";
 
 const navItems = [
   { label: "Sobre", href: "/#sobre" },
-  { label: "Serviços", href: "/#servicos" },
-  { label: "Equipe", href: "/#equipe" },
-  { label: "Vagas", href: "/#vagas" },
-  { label: "Eventos", href: "/#eventos" },
+  { label: "Serviços", href: "/servicos" },
+  { label: "Equipe", href: "/equipe" }, // <-- Apenas isto mudou!
+  { label: "Vagas", href: "/vagas" },
+  { label: "Eventos", href: "/eventos" },
 ];
 
 export default function Navbar() {
@@ -17,9 +17,17 @@ export default function Navbar() {
   const currentLocation = window.location.pathname;
 
   const handleNavClick = (href: string) => {
+    // Se for apenas para ir para o topo (ex: clicar no logo)
+    if (href === "/") {
+      setLocation("/");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsOpen(false);
+      return;
+    }
+
     const [path, hash] = href.split('#');
     
-    if (currentLocation === path && hash) {
+    if ((currentLocation === path || (currentLocation === "/" && !path)) && hash) {
       const element = document.getElementById(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
@@ -35,14 +43,15 @@ export default function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      // Devolvi a tua linha fininha e o fundo sólido!
       className="fixed top-0 left-0 right-0 z-50 bg-[#0B3D2C] border-b border-[#00D9A3]/20"
     >
-      <div className="container flex items-center justify-between h-20">
+      <div className="container flex items-center justify-between h-20 px-4">
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="flex items-center gap-3 cursor-pointer"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => handleNavClick("/")}
         >
           <img
             src="/logo-igamexpert.png"

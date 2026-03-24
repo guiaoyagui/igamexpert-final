@@ -1,25 +1,22 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import Events from "@/components/Events";
-import Team from "@/components/Team";
-import Jobs from "@/components/Jobs";
-import ContactForm from "@/components/ContactForm";
-import Footer from "@/components/Footer";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+// import Services from "../components/Services"; <-- A próxima secção a brilhar aqui!
+import Events from "../components/Events";
+import ContactForm from "../components/ContactForm";
+import Footer from "../components/Footer";
+import BackgroundRibbon from "../components/BackgroundRibbon";
 
 export default function Home() {
-  return (
-    <div className="min-h-screen flex flex-col bg-[#0B3D2C]">
-      <Navbar />
-      <main>
+return (
+    <div className="relative min-h-screen">
+      <BackgroundRibbon />
+      <div className="relative z-10">
+        <Navbar />
         <Hero />
-        <Services />
         <Events />
-        <Team />
-        <Jobs />
         <ContactForm />
-      </main>
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }

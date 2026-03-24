@@ -1,119 +1,80 @@
 import { motion } from "framer-motion";
+import { ArrowRight, Calendar } from "lucide-react";
 
 export default function Hero() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
-
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-[#0B3D2C]"
-    >
-
-      {/* Content */}
-      <div className="container relative z-10">
+    <section id="home" className="relative flex items-center justify-center bg-transparent pt-40 pb-32 min-h-[80vh]">
+      
+      <div className="container relative z-10 px-6 max-w-4xl mx-auto flex flex-col items-start text-left md:items-center md:text-center">
+        
+        {/* Etiqueta de Destaque */}
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-8 max-w-3xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00D9A3]/30 bg-[#0B3D2C]/80 backdrop-blur-md mb-6 shadow-lg"
         >
-          <motion.div variants={itemVariants} className="space-y-8">
-            {/* Main Title */}
-            <div className="space-y-4">
-              <h1 className="font-poppins font-700 text-5xl lg:text-6xl text-white leading-tight">
-                EVENTO SOBRE O MERCADO BRASILEIRO DE JOGOS E APOSTAS
-              </h1>
-              <p className="text-lg text-white/80 font-inter">
-                Consultoria especializada para executivos seniores ganharem no mercado brasileiro
-              </p>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex gap-4 pt-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const element = document.querySelector("#contato");
-                  if (element) element.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="px-8 py-3 bg-[#00D9A3] text-black font-poppins font-700 rounded-full hover:bg-[#00FF88] transition-all duration-300 flex items-center gap-2"
-              >
-                CONTATE-NOS →
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const element = document.querySelector("#servicos");
-                  if (element) element.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="px-8 py-3 border-2 border-white text-white font-poppins font-700 rounded-full hover:bg-white hover:text-black transition-all duration-300"
-              >
-                SAIBA MAIS
-              </motion.button>
-            </div>
-
-            {/* Stats */}
-            <motion.div
-              variants={itemVariants}
-              className="flex gap-8 pt-8 border-t border-white/10"
-            >
-              <div>
-                <p className="text-3xl font-poppins font-700 text-[#00FF88]">
-                  19+
-                </p>
-                <p className="text-sm text-white/60">Anos de Experiência</p>
-              </div>
-              <div>
-                <p className="text-3xl font-poppins font-700 text-[#00FF88]">
-                  500+
-                </p>
-                <p className="text-sm text-white/60">Empresas Consultadas</p>
-              </div>
-              <div>
-                <p className="text-3xl font-poppins font-700 text-[#00FF88]">
-                  100%
-                </p>
-                <p className="text-sm text-white/60">Taxa de Satisfação</p>
-              </div>
-            </motion.div>
-          </motion.div>
+          <span className="w-2 h-2 rounded-full bg-[#00D9A3] animate-pulse" />
+          <span className="text-white/90 text-xs font-poppins font-semibold uppercase tracking-widest">
+            Especialistas em iGaming
+          </span>
         </motion.div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
-      >
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-2 bg-white/50 rounded-full"
-          />
-        </div>
-      </motion.div>
+        {/* Título Principal - Limpo, uniforme e profissional */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="font-poppins font-black text-4xl md:text-5xl lg:text-6xl text-white mb-4 drop-shadow-2xl uppercase tracking-tight leading-tight md:leading-tight"
+        >
+          A Sua Porta de Entrada <br className="hidden md:block" /> 
+          No Mercado Brasileiro <br />
+          
+          {/* Destaque apenas na cor e no brilho, sem fontes estranhas! */}
+          <span className="text-[#00D9A3] drop-shadow-[0_0_15px_rgba(0,217,163,0.5)]">
+            de iGaming
+          </span>
+        </motion.h1>
+
+        {/* Subtítulo */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-white/80 text-sm md:text-xl font-poppins max-w-xl md:mx-auto mb-8 md:mb-10 mt-4"
+        >
+          Estratégias baseadas em dados para impulsionar a sua marca e escalar os seus resultados no Brasil.
+        </motion.p>
+
+        {/* Botões de Ação */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-start md:items-center justify-center gap-4 w-full sm:w-auto"
+        >
+          <button
+            onClick={() => {
+              const el = document.getElementById("contato");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="w-full sm:w-auto px-6 py-3 bg-[#00D9A3] text-[#0B3D2C] font-poppins font-bold rounded-xl md:rounded-full hover:bg-white hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base shadow-[0_0_20px_rgba(0,217,163,0.3)] relative overflow-hidden group"
+          >
+            <span className="relative z-10 flex items-center gap-2"><Calendar size={18} /> Agendar Reunião</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const el = document.getElementById("servicos");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="w-full sm:w-auto px-6 py-3 bg-[#0B3D2C]/50 border-2 border-[#00D9A3]/50 text-white font-poppins font-bold rounded-xl md:rounded-full hover:border-[#00D9A3] hover:bg-[#00D9A3]/10 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base backdrop-blur-sm"
+          >
+            Conhecer Serviços <ArrowRight size={18} />
+          </button>
+        </motion.div>
+
+      </div>
     </section>
   );
 }

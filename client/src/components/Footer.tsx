@@ -18,7 +18,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative bg-[#0B3D2C] overflow-hidden py-16">
+    // CORREÇÃO: bg-transparent para ver o BackgroundRibbon
+    <footer className="relative bg-transparent overflow-hidden py-16">
       <div className="container px-4">
         {/* Container Principal */}
         <motion.div

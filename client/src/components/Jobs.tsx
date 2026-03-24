@@ -1,115 +1,187 @@
-import { motion } from "framer-motion";
-import { jobs } from "@/lib/data";
-import { MapPin, Briefcase, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Briefcase, Globe, ChevronLeft, ChevronRight } from "lucide-react";
+
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import BackgroundRibbon from "./BackgroundRibbon";
+
+const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
+const JOBS_PER_PAGE = 4; // Exatamente as 4 opções por página que pediste!
 
 export default function Jobs() {
+  const [jobsData, setJobsData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (!GOOGLE_SHEETS_URL) {
+      setLoading(false);
+      return;
+    }
+
+    fetch(`${GOOGLE_SHEETS_URL}?aba=Vagas`)
+      .then(res => res.json())
+      .then(data => {
+        // Filtro de Segurança Duplo: Ignora inativos E ignora linhas vazias do Excel
+        const vagasAtivas = data.filter((v: any) => 
+          v.status !== 'Inativo' && 
+          v.title && 
+          String(v.title).trim() !== ''
+        );
+        setJobsData(vagasAtivas);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Erro a carregar vagas:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  // Lógica da Paginação
+  const totalPages = Math.ceil(jobsData.length / JOBS_PER_PAGE);
+  const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
+  const currentJobs = jobsData.slice(startIndex, startIndex + JOBS_PER_PAGE);
+
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } }
   };
 
   return (
-    <section id="vagas" className="relative py-24 overflow-hidden">
-      <div className="container relative z-10 px-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
-          <h2 className="font-poppins font-700 text-5xl text-white mb-4">
-            ESTAMOS CONTRATANDO
-          </h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Junte-se a nossa equipe de especialistas em iGaming
-          </p>
-        </motion.div>
+    <div className="relative min-h-screen bg-[#0B3D2C]">
+      <BackgroundRibbon />
+      
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        
+        <main className="flex-grow pt-32 pb-24">
+          <div className="container px-4 max-w-4xl mx-auto">
+            
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <h1 className="font-poppins font-bold text-4xl md:text-5xl text-white mb-4 uppercase tracking-tight">
+                CARREIRAS NA <span className="text-[#00D9A3]">IGAMEXPERT</span>
+              </h1>
+              <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto">
+                Junte-se à nossa equipa de especialistas e ajude-nos a transformar o mercado de iGaming no Brasil.
+              </p>
+            </motion.div>
 
-        {/* Container Principal */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-[#00D9A3]/30 to-[#00FF88]/20 backdrop-blur-sm rounded-3xl p-8 md:p-12 border-2 border-[#00D9A3]/40"
-        >
-          {/* Jobs List */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
-            {jobs.map((job) => (
-              <motion.div
-                key={job.id}
-                variants={itemVariants}
-                whileHover={{ scale: 1.02, x: 5 }}
-                className="p-6 rounded-2xl bg-[#0B3D2C]/60 backdrop-blur-sm border border-[#00D9A3]/30 hover:border-[#00D9A3]/60 hover:bg-[#0B3D2C]/80 transition-all group"
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                  {/* Job Info */}
-                  <div className="flex-1">
-                    <h3 className="font-poppins font-700 text-2xl text-[#00FF88] mb-3 group-hover:text-[#00D9A3] transition-colors">
-                      {job.title}
-                    </h3>
-                    <div className="flex flex-col md:flex-row md:items-center gap-4 text-white/70 mb-4">
-                      <div className="flex items-center gap-2">
-                        <MapPin size={16} className="text-[#00D9A3]" />
-                        <span>{job.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Briefcase size={16} className="text-[#00D9A3]" />
-                        <span className="capitalize">{job.department}</span>
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="px-3 py-1 bg-[#00D9A3]/30 text-[#00FF88] rounded-full text-xs font-medium border border-[#00D9A3]/40">
-                        {job.type === "full-time" ? "Full Time" : job.type === "part-time" ? "Part Time" : "Contract"}
-                      </span>
-                      {job.remote && (
-                        <span className="px-3 py-1 bg-[#00FF88]/30 text-[#00FF88] rounded-full text-xs font-medium border border-[#00FF88]/40 flex items-center gap-1">
-                          <Globe size={12} />
-                          Remoto
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-3 bg-[#00D9A3] text-[#0B3D2C] font-poppins font-600 rounded-full text-sm hover:bg-[#00FF88] transition-all whitespace-nowrap shadow-lg shadow-[#00D9A3]/50 hover:shadow-[#00FF88]/50"
-                  >
-                    CANDIDATAR-SE
-                  </motion.button>
-                </div>
+            {loading ? (
+              <div className="text-center text-[#00D9A3] py-20 font-poppins text-lg animate-pulse">
+                A procurar vagas disponíveis...
+              </div>
+            ) : jobsData.length === 0 ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20 bg-[#0B3D2C]/40 backdrop-blur-sm border-2 border-[#00D9A3]/20 rounded-3xl">
+                <p className="text-white/60 text-lg font-poppins mb-4">De momento não temos vagas em aberto.</p>
+                <p className="text-[#00D9A3] text-sm font-poppins">Fique atento, atualizamos esta página frequentemente!</p>
               </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  key={currentPage} // Força a animação quando a página muda
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="flex flex-col gap-6"
+                >
+                  <AnimatePresence mode="wait">
+                    {currentJobs.map((job) => (
+                      <motion.div
+                        key={job.id || job.title}
+                        variants={itemVariants}
+                        whileHover={{ y: -4, borderColor: "rgba(0, 217, 163, 0.6)" }}
+                        className="bg-[#0B3D2C]/60 backdrop-blur-md border-2 border-[#00D9A3]/20 rounded-2xl p-6 md:p-8 shadow-lg transition-all group flex flex-col md:flex-row md:items-center justify-between gap-6"
+                      >
+                        <div className="flex-1">
+                          <h3 className="font-poppins font-bold text-2xl text-white mb-4 group-hover:text-[#00D9A3] transition-colors">
+                            {job.title}
+                          </h3>
+                          
+                          <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-4">
+                            <div className="flex items-center gap-2 text-white/80 font-medium text-sm">
+                              <MapPin size={18} className="text-[#00D9A3]" />
+                              {job.location || 'Localização não definida'}
+                            </div>
+                            <div className="flex items-center gap-2 text-white/80 font-medium text-sm">
+                              <Briefcase size={18} className="text-[#00D9A3]" />
+                              {job.department || 'Departamento não definido'}
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-3">
+                            {job.type && (
+                              <span className="px-4 py-1.5 rounded-full border border-[#00D9A3]/50 bg-[#00D9A3]/10 text-[#00D9A3] text-xs font-bold uppercase tracking-wider">
+                                {job.type}
+                              </span>
+                            )}
+                            {String(job.isRemote).toLowerCase() === "sim" && (
+                              <span className="px-4 py-1.5 rounded-full border border-[#00D9A3]/50 bg-[#00D9A3]/10 text-[#00D9A3] text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <Globe size={14} /> Remoto
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 mt-2 md:mt-0">
+                          <a 
+                            href={job.link || "#"} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-block w-full md:w-auto px-8 py-3 bg-[#00D9A3] text-[#0B3D2C] font-poppins font-bold text-sm rounded-xl hover:bg-white hover:scale-105 transition-all text-center shadow-[0_0_15px_rgba(0,217,163,0.3)]"
+                          >
+                            Aplicar Agora
+                          </a>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Controlos de Paginação com as Setinhas */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-6 mt-12">
+                    <button 
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                      disabled={currentPage === 1}
+                      className="p-3 rounded-full border-2 border-[#00D9A3]/50 text-[#00D9A3] hover:bg-[#00D9A3] hover:text-[#0B3D2C] disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#00D9A3] transition-all duration-300"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    
+                    <span className="text-white/60 font-poppins font-medium">
+                      Página <span className="text-[#00D9A3] font-bold">{currentPage}</span> de {totalPages}
+                    </span>
+
+                    <button 
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                      className="p-3 rounded-full border-2 border-[#00D9A3]/50 text-[#00D9A3] hover:bg-[#00D9A3] hover:text-[#0B3D2C] disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#00D9A3] transition-all duration-300"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+
+          </div>
+        </main>
+
+        <Footer />
       </div>
-    </section>
+    </div>
   );
 }

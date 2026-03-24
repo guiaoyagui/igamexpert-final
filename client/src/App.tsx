@@ -5,16 +5,25 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Services from "./components/Services";
+import Events from "./components/Events";
+import Jobs from "./components/Jobs";
+import EventDetails from "./pages/EventDetails";
 import ScrollToAnchor from "./components/ScrollToAnchor";
+// Importamos a nova página da Equipa
+import TeamPage from "./pages/TeamPage"; 
 
 function Router() {
   return (
     <>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/services" component={Home} />
-        <Route path="/events" component={Home} />
-        <Route path="/jobs" component={Home} />
+        <Route path="/servicos" component={Services} />
+        <Route path="/eventos" component={Events} />
+        <Route path="/evento/:id" component={EventDetails} />
+        <Route path="/vagas" component={Jobs} />
+        {/* A NOSSA NOVA ROTA AQUI */}
+        <Route path="/equipe" component={TeamPage} /> 
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
