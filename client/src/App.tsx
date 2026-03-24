@@ -1,47 +1,28 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import Services from "./components/Services";
-import Events from "./components/Events";
-import Jobs from "./components/Jobs";
-import EventDetails from "./pages/EventDetails";
-import ScrollToAnchor from "./components/ScrollToAnchor";
-// Importamos a nova página da Equipa
-import TeamPage from "./pages/TeamPage"; 
+import { Switch, Route } from "wouter";
+import Home from "./pages/Home"; // Mantém se a Home estiver em pages
+import Services from "./components/Services"; // Apontando para components
+import Team from "./components/Team";         // Apontando para components
+import Jobs from "./components/Jobs";         // Apontando para components
+import NotFound from "./pages/NotFound";
 
 function Router() {
   return (
-    <>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/servicos" component={Services} />
-        <Route path="/eventos" component={Events} />
-        <Route path="/evento/:id" component={EventDetails} />
-        <Route path="/vagas" component={Jobs} />
-        {/* A NOSSA NOVA ROTA AQUI */}
-        <Route path="/equipe" component={TeamPage} /> 
-        <Route path="/404" component={NotFound} />
-        <Route component={NotFound} />
-      </Switch>
-      <ScrollToAnchor />
-    </>
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/servicos" component={Services} />
+      <Route path="/equipe" component={Team} />
+      <Route path="/vagas" component={Jobs} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+    <>
+      <Router />
+      {/* Removemos o <Toaster /> daqui para não dar erro */}
+    </>
   );
 }
 
